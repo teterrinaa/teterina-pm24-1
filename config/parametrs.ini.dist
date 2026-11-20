@@ -1,0 +1,7 @@
+[db]
+host = ""
+login = ""
+password = ""
+name = ""
+port = 3306
+charset = "utf8mb4"

@@ -1,0 +1,6 @@
+http://site.local/	главная со списком карточек
+http://site.local/material.php?id=1	пост «Расписание занятий», без файлов
+http://site.local/material.php?id=2	пост с двумя ссылками на файлы (lecture1.pdf, examples.zip)
+http://site.local/material.php?id=999	сообщение «Материал не найден»
+http://site.local/material.php?id=abc	сообщение «Получен неверный id»
+http://localhost/phpmyadmin	phpMyAdmin с базой file_exchange

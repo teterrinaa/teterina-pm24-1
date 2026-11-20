@@ -1,0 +1,10 @@
+config/parametrs.ini
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+*.sql
+uploads/
+composer.phar
+vendor/
+.php-cs-fixer.cache
