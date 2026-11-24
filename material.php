@@ -3,13 +3,12 @@ require __DIR__ . "/db.php";
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-if (!$id || $id <= 0) {
+if(!$id || $id <= 0) {
     die("Получен неверный id");
 }
 
-$sql = "select p.id, p.title, p.content, p.created_at, s.title as subject, u.name as author
+$sql = "select p.id, p.title, p.content, p.created_at, u.name as author
         from posts p
-        join subjects s on s.id = p.subject_id
         join users u on u.id = p.user_id
         where p.id = :id";
 $result = $pdo->prepare($sql);
@@ -23,7 +22,7 @@ if (!$material) {
     die("Материал не найден");
 }
 
-$sqlFiles = "select original_name, file_path from post_files where post_id = :id";
+$sqlFiles = "select original_name, file_path, size_mb from post_files where post_id = :id";
 $filesResult = $pdo->prepare($sqlFiles);
 $filesResult->bindParam(':id', $id, PDO::PARAM_INT);
 $filesResult->execute();
@@ -56,6 +55,8 @@ $date = strtotime($material['created_at']);
     <symbol id="i-close" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
     <symbol id="i-info" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M10 5.5v5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="14" r="1.1" fill="currentColor"/></symbol>
     <symbol id="i-clock" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 3.2V6l1.8 1.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-back" viewBox="0 0 20 20"><path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-download" viewBox="0 0 20 20"><path d="M10 3v9m0 0L6.5 8.5M10 12l3.5-3.5M4 16h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
   </svg>
 
   <div class="container">
@@ -72,24 +73,35 @@ $date = strtotime($material['created_at']);
     </header>
 
     <main>
-      <a href="/" class="back-link">← Все материалы</a>
+      <div class="page-head">
+        <h1 class="page-head__title"><?= $material['title'] ?></h1>
+        <a href="/" class="btn btn--outline btn--add" aria-label="Назад к списку">
+          <svg width="20" height="20" aria-hidden="true"><use href="#i-back"/></svg>
+          <span class="btn__text">Назад к списку</span>
+        </a>
+      </div>
 
-      <article class="post">
-        <p class="post__meta">
-          <?= date('j', $date) . ' ' . $months[(int) date('n', $date)] ?> · <?= $material['subject'] ?> · <?= $material['author'] ?>
-        </p>
-        <h1 class="post__title"><?= $material['title'] ?></h1>
-        <p class="post__text"><?= $material['content'] ?></p>
+      <div class="post-info">
+        <span>Добавлено <?= date('j', $date) . ' ' . $months[(int) date('n', $date)] ?></span>
+        <span class="post-info__dot" aria-hidden="true"></span>
+        <span><?= $material['author'] ?></span>
+      </div>
 
-        <?php if ($files): ?>
-          <h2 class="post__files-title">Прикрепленные файлы</h2>
-          <ul class="post__files">
-            <?php foreach ($files as $file): ?>
-              <li><a class="post__file" href="/<?= $file['file_path'] ?>" download><?= $file['original_name'] ?></a></li>
-            <?php endforeach; ?>
-          </ul>
-        <?php endif; ?>
-      </article>
+      <p class="post-text"><?= $material['content'] ?></p>
+
+      <?php if ($files): ?>
+        <ul class="files">
+          <?php foreach ($files as $file): ?>
+            <li>
+              <a href="/<?= $file['file_path'] ?>" class="file" download>
+                <svg width="20" height="20" aria-hidden="true"><use href="#i-download"/></svg>
+                <span><?= $file['original_name'] ?></span>
+                <span class="file__size"><?= $file['size_mb'] ?> Mb</span>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
     </main>
 
     <footer class="footer">

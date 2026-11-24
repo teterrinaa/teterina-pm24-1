@@ -4,3 +4,6 @@ http://site.local/material.php?id=2	пост с двумя ссылками на
 http://site.local/material.php?id=999	сообщение «Материал не найден»
 http://site.local/material.php?id=abc	сообщение «Получен неверный id»
 http://localhost/phpmyadmin	phpMyAdmin с базой file_exchange
+
+.\vendor\bin\php-cs-fixer.bat fix --dry-run --diff
+.\vendor\bin\php-cs-fixer.bat fix

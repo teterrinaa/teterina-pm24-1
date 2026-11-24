@@ -5,6 +5,7 @@ $sql = "select id, title, created_at from posts order by created_at desc limit 1
 
 $result = $pdo->prepare($sql);
 $result->execute();
+//ассоциативный массив месяц, чтобы они отображались корректно
 $months = [
     1 => "января", 2 => "февраля", 3 => "марта", 4 => "апреля",
     5 => "мая", 6 => "июня", 7 => "июля", 8 => "августа",
